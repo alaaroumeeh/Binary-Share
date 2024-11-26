@@ -2,11 +2,13 @@ Project: Binary Share
 Objective: Simple and efficient file share between two nodes on a network.
 Connection: Symmetric.
 Structure:
-	TCP stream sockets. Client connects to host, creating two streams in two threads,
+	TCP stream sockets with reuse. Client connects to host, creating two streams in two threads,
 	one for sending data, other for receiving data, respectively.
 	Sender() procedure operates sending of files on stream#1 in thread#1.
 	Receiver() procedure operates receival of files on stream#2 in thread#2.
 	Log files client.log and host.log are created to record events and debug errors.	
+
+Warning: Sender() uses "Send&Sleep" method to send multiple files: Send,sleep(5),Send.
 
 Usage:
 	Launch host.py file on a node. Server socket is bound to all interfaces
