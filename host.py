@@ -90,7 +90,7 @@ def receiver():
     logging.debug(f"Stream C1 closed. {myaddr} -x {addr1}")
     
     
-logging.basicConfig(format="%(asctime)s %(message)s", level=logging.DEBUG, filename="host.log")
+logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s", level=logging.DEBUG, filename="host.log")
 
 
 s = socket.socket()
