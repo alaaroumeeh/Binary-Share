@@ -93,7 +93,7 @@ def receiver():
     print(f"Stream C2 closed. {myaddr} -x {IP}")
     logging.debug(f"Stream C2 closed. {myaddr} -x {IP}")
 
-logging.basicConfig(format="%(asctime)s %(message)s", level=logging.DEBUG,filename="client.log")
+logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s", level=logging.DEBUG,filename="client.log")
 
 c1 = socket.socket()
 c2 = socket.socket()
