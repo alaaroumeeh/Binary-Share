@@ -3,7 +3,6 @@ import socket
 import os
 import logging
 import threading
-from time import sleep
 from tkinter.filedialog import askopenfilenames
 
 
@@ -46,7 +45,13 @@ def sender():
                         total_sent += sent
                 print(f"Sent '{filebasename}' {unit(size)} to {IP}.")
                 logging.debug(f"Sent '{filebasename}' {unit(size)} to {IP}.")
-                sleep(5)
+                b = c1.recv(5)
+                if not b:
+                    raise ConnectionError
+                if b != b"<END>":
+                    logging.warning(f"EOT != END. Send Task#{i} aborted.")
+                    print(f"EOT != END. Send Task#{i} aborted.")
+                    break
             i += 1
 
     except ConnectionError:
@@ -62,7 +67,6 @@ def sender():
 
 def receiver():
     try:
-        i = 1
         while True:
             namesize = c2.recv(128).decode()
             if not namesize:
@@ -76,11 +80,13 @@ def receiver():
                 total_recd = 0
                 while total_recd < size:
                     chunk = c2.recv(4096)
+                    if not chunk:
+                        raise ConnectionError
                     f.write(chunk)
                     total_recd += len(chunk)
             print(f"Received '{filename}' {unit(size)} from {IP}.")
             logging.info(f"Received '{filename}' {unit(size)} from {IP}.")
-            i += 1
+            c2.send(b"<END>")
 
     except ConnectionError:
         print("Connection Error.")
@@ -93,7 +99,8 @@ def receiver():
     print(f"Stream C2 closed. {myaddr} -x {IP}")
     logging.debug(f"Stream C2 closed. {myaddr} -x {IP}")
 
-logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s", level=logging.DEBUG,filename="client.log")
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.DEBUG,filename="client.log")
+
 
 c1 = socket.socket()
 c2 = socket.socket()
