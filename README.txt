@@ -8,7 +8,7 @@ Structure:
 	Receiver() procedure operates receival of files on stream#2 in thread#2.
 	Log files client.log and host.log are created to record events and debug errors.	
 
-Warning: Sender() uses "Send&Sleep" method to send multiple files: Send,sleep(5),Send.
+Update: Send method changed to "Sendfile-Endfile-Sendfile".
 
 Usage:
 	Launch host.py file on a node. Server socket is bound to all interfaces
